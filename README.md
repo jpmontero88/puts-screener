@@ -67,7 +67,7 @@ Una sola vez, en **Settings** del repo:
 
 ### Dónde queda el sitio
 
-El sitio está publicado en `https://goloop-ar.github.io/puts-screener/`. `index.html` es el último
+El sitio está publicado en `https://jpmontero88.github.io/puts-screener/`. `index.html` es el último
 run; `history.html` lista el histórico con links a cada corrida (HTML + CSV).
 
 El histórico canónico vive **commiteado en el repo** (`output/screening_*` + `data/screening_history.db`);

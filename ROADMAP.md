@@ -2,7 +2,7 @@
 
 > Documento vivo: estado actual, issues abiertos, próximos pasos. Actualizar al cierre de cada sesión.
 
-**Última actualización**: 2026-09-07
+**Última actualización**: 2026-10-07
 
 ---
 
@@ -426,7 +426,7 @@ retirados de los triggers viejos).
 ### Estadísticas
 
 - **Tests**: 636 verdes
-- **Commits**: 232
+- **Commits**: 255
 - **Universo accesible**: 985 tickers (503 US S&P 500 + 482 EU STOXX 600)
 - **Punto de entrada**: `python -m puts_screener.run`
 
@@ -754,6 +754,7 @@ Para no buscarlas en specs:
 - **2026-09-07 — Spec 12, `range_floor` y `pullback_in_uptrend` se unifican en `zone_proximity` (D12.1-D12.3)**: ambos medían "cerca de una zona validada" — `pullback_in_uptrend` con las condiciones correctas (`score>=5`, `distance_pct<=10%`) pero gateado a `uptrend`; `range_floor` con una condición de rango 60d independiente que chocaba con `ZONE_MIN_DISTANCE_PCT` (spec 02) y nunca disparaba (0/36 en 4.5 meses). Fix: un solo trigger regime-agnóstico con las condiciones de `pullback_in_uptrend`, sin gate de régimen. `pullback_in_uptrend` se absorbe (era 716/1113 = 64% del output histórico, no se podía retirar sin reemplazo); `range_floor` se retira sin reemplazo (0 filas reales en toda la DB).
 - **2026-09-07 — Spec 12, peso de `zone_proximity` = 0.4, no 0.7 (D12.6)**: revisado tras simular la reclasificación completa con ambos valores contra la DB real (1113 filas). Con 0.7 (heredado sin revisar de `pullback_in_uptrend`), 155 candidatos con `double_bottom_unconfirmed` (peso 0.5) pasaban a mostrar `zone_proximity` como primario — efecto no buscado, expuesto recién al desacoplar el régimen (antes `pullback_in_uptrend` y `double_bottom_unconfirmed` nunca competían por vivir en regímenes distintos). Regla adoptada: `zone_proximity` es un trigger genérico de posición (cierto para el 100% de los candidatos que pasan Paso 2) y debe ceder ante CUALQUIER trigger que nombre una causa — estructura o evento —, no ganarles. Con 0.4 queda por debajo de todos ellos; los 155 `double_bottom_unconfirmed` conservan su primario. Efecto secundario verificado y aceptado (D12.9): 61 candidatos pasan de `pullback_in_uptrend` a `post_earnings_dip`, que estaba sistemáticamente tapado (69 disparos históricos en `triggers_json`, solo 4 como primary).
 - **2026-09-07 — Spec 12, no se tocan los umbrales de `evaluate_regime` (D12.5)**: blast radius medido para 6 combinaciones de `(REGIME_LATERAL_TOLERANCE_PCT, REGIME_LATERAL_MAX_RANGE_PCT)`. La pregunta que hubiera decidido (¿el grupo reclasificado a `lateral` aguanta igual/mejor/peor que el que se queda en `uptrend`?) salió N=21, no concluyente (mínimo declarado: 30). Además la combinación más agresiva probada diluye `lateral` con candidatos de rango 60d casi el doble del real. El problema real (candidatos perdidos) se resolvió sin necesitar tocar `evaluate_regime`.
+- **2026-10-07 — Rename de usuario GitHub goloop-ar → jpmontero88.** Remote y URL de Pages actualizados en README/SPEC; menciones históricas sin tocar (`ROADMAP.md` §3.2 y esta misma sección, entradas del 2026-05-28; docstring de `tests/test_publish_pages.py`). El workflow `daily-screening.yml` no requirió cambios: solo usa `actions/*` y resuelve repo, token y URL de Pages en runtime. Nuevo sitio: `https://jpmontero88.github.io/puts-screener/`.
 
 ---
 

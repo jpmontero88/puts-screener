@@ -142,7 +142,7 @@ GitHub Actions cron (22:00 UTC L-V)
 - GitHub Actions workflow con cron
 - Publicación de HTML a GitHub Pages
 - Auto-commit de outputs al repo
-- Sitio publicado: https://goloop-ar.github.io/puts-screener/
+- Sitio publicado: https://jpmontero88.github.io/puts-screener/
 
 ### Fase 4 — Opciones (futuro)
 
