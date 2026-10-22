@@ -1,0 +1,2023 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Screening 2026-10-22</title>
+  <style>
+    :root {
+      --bg: #f7f8fa; --card-bg: #ffffff; --border: #e2e5ea; --text: #1c2330;
+      --muted: #6b7280; --flag-bg: #fff8e1; --flag-border: #f59e0b; --flag-text: #b45309;
+      --strikes-bg: #f1f5f9;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0; background: var(--bg); color: var(--text); line-height: 1.45;
+    }
+    header.page, main, footer { max-width: 1100px; margin: 0 auto; padding: 1rem 1.25rem; }
+    header.page h1 { margin: 0 0 0.25rem; font-size: 1.5rem; }
+    header.page p { margin: 0; color: var(--muted); }
+    main {
+      display: grid; gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    .card {
+      background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem 1.1rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+    .card-head {
+      display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap;
+    }
+    .ticker { font-size: 1.2rem; }
+    .sector, .exchange { color: var(--muted); font-size: 0.82rem; }
+    .universe-badges { display: inline-flex; gap: 0.25rem; flex-wrap: wrap; }
+    .universe-badge {
+      background: #e2e5ea; color: #44505f; padding: 0.1rem 0.4rem;
+      border-radius: 4px; font-size: 0.7rem; font-weight: 600;
+    }
+    .badge {
+      margin-left: auto; padding: 0.15rem 0.55rem; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 600; color: #ffffff;
+    }
+    /* spec 10: color por régimen reemplaza color por tipo T */
+    .regime-uptrend { background: #16a34a; }   /* verde — alcista con soporte */
+    .regime-lateral { background: #6b7280; }   /* gris — rango */
+    .regime-downtrend { background: #ea580c; } /* rojo — bajista */
+    .regime-reversal { background: #ca8a04; }  /* amarillo — cambio de régimen */
+    .regime- { background: #4a5568; }          /* fallback (legacy / sin clasificar) */
+    .wheel-badge {
+      margin-left: 0.4rem; padding: 0.1rem 0.4rem; border-radius: 4px;
+      font-size: 0.7rem; font-weight: 600;
+      background: #fef3c7; color: #92400e;
+    }
+    .zone { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; margin: 0.75rem 0; }
+    .metric { display: flex; flex-direction: column; }
+    .metric .label {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted);
+    }
+    .metric .value { font-weight: 600; }
+    .elements h4, .flags h4 { margin: 0.6rem 0 0.3rem; font-size: 0.85rem; }
+    .elements ul, .flags ul { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; }
+    .elements .more { color: var(--muted); list-style: none; margin-left: -1.1rem; }
+    .indicators { font-size: 0.82rem; color: var(--muted); margin-top: 0.6rem; }
+    .indicators div { margin: 0.15rem 0; }
+    .flags {
+      margin-top: 0.7rem; background: var(--flag-bg); border: 1px solid var(--flag-border);
+      border-radius: 8px; padding: 0.5rem 0.75rem;
+    }
+    .flags h4 { color: var(--flag-text); }
+    .momentum {
+      margin-top: 0.7rem; background: #eef1f5; border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.5rem 0.75rem;
+    }
+    .momentum h4 { margin: 0 0 0.3rem; font-size: 0.85rem; color: var(--muted); }
+    .momentum ul { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; }
+    .candles {
+      margin-top: 0.7rem; background: #eef1f5; border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.5rem 0.75rem;
+    }
+    .candles h4 { margin: 0 0 0.3rem; font-size: 0.85rem; color: var(--muted); }
+    .candles ul { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; }
+    .tier { margin: 0.2rem 0 0.05rem; }
+    .tier-stars { font-size: 1.3rem; letter-spacing: 1px; }
+    .tier-label { color: var(--muted); font-size: 0.85rem; margin-left: 0.4rem; }
+    .score-raw { color: var(--muted); font-size: 0.72rem; margin-bottom: 0.3rem; }
+    .macro-banner {
+      max-width: 1100px; margin: 1rem auto; padding: 12px 16px;
+      background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px;
+    }
+    .macro-banner h2 { font-size: 1.1em; margin: 0 0 8px 0; }
+    .macro-banner ul { list-style: none; padding: 0; margin: 0; }
+    .macro-banner li { display: flex; gap: 12px; padding: 4px 0; align-items: center; flex-wrap: wrap; }
+    .macro-date { font-weight: 600; }
+    .macro-days { color: #856404; }
+    .macro-kind { padding: 2px 8px; border-radius: 4px; background: #ffc107; font-size: 0.85em; font-weight: 600; }
+    .macro-jurisdiction { padding: 1px 6px; border-radius: 3px; background: #f0f0f0; font-size: 0.85em; }
+    footer { color: var(--muted); font-size: 0.8rem; text-align: center; }
+    .card-split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1rem;
+      margin-top: 0.75rem;
+      align-items: start;
+    }
+    .narrative { margin-bottom: 0.6rem; }
+    .narrative p {
+      margin: 0.3rem 0;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+    .narrative p strong:first-child { color: var(--text); }
+    .mini-chart {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+    .mini-chart svg {
+      width: 100%;
+      height: auto;
+      max-width: 480px;
+      color: var(--text);
+    }
+    .mini-chart .placeholder {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+    .strikes-banner {
+      margin-top: 0.8rem;
+      padding: 0.7rem 0.9rem;
+      background: var(--strikes-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.5rem;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .strikes-banner .strikes-title {
+      font-weight: 700;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-right: 1rem;
+    }
+    .strikes-banner .strikes-list {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .strikes-banner .strike {
+      display: inline-flex;
+      gap: 0.4rem;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .strikes-banner .dot {
+      width: 0.7rem;
+      height: 0.7rem;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .strikes-banner .dot.aggressive { background: #dc2626; }
+    .strikes-banner .dot.natural { background: #f97316; }
+    .strikes-banner .dot.conservative { background: #16a34a; }
+    .strikes-banner .strike-anchor {
+      color: var(--muted);
+      font-weight: 400;
+      font-size: 0.78rem;
+      margin-left: 0.15rem;
+    }
+    .strikes-banner .yield-note {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-style: italic;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #13161c; --card-bg: #1b1f27; --border: #2a2f3a; --text: #e6e9ef;
+        --muted: #9aa3b2; --flag-bg: #2a2410; --flag-text: #fbbf24;
+        --strikes-bg: #232a36;
+      }
+    }
+    @media (max-width: 480px) { main { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) {
+      .card-split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page">
+    <h1>Screening 2026-10-22</h1>
+    <p>Universo: 984 &middot; Pasan Paso 1: 59 &middot; Pasan Paso 2: 16</p>
+  </header>
+  
+  <section class="macro-banner">
+    <h2>Eventos macro próximos (ventana 45 días)</h2>
+    <ul>
+    
+      <li>
+        <span class="macro-date">2026-10-28</span>
+        <span class="macro-days">en 6 días</span>
+        <span class="macro-kind macro-kind-fomc">FOMC</span>
+        <span class="macro-jurisdiction">US</span>
+        <span class="macro-desc">FOMC meeting - October 27-28 (statement + press conference day 2)</span>
+      </li>
+    
+      <li>
+        <span class="macro-date">2026-11-10</span>
+        <span class="macro-days">en 19 días</span>
+        <span class="macro-kind macro-kind-cpi">CPI</span>
+        <span class="macro-jurisdiction">US</span>
+        <span class="macro-desc">CPI release - October 2026 data (8:30 AM ET)</span>
+      </li>
+    
+    </ul>
+  </section>
+  
+  <main>
+    
+    <article class="card regime-uptrend">
+      <header class="card-head">
+        <strong class="ticker">BATS.L</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">stoxx600</span>
+          
+        </span>
+        
+        <span class="sector">Consumer Defensive</span>
+        <span class="exchange">LSE</span>
+        <span class="badge regime-uptrend">Uptrend: Proximidad a zona</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐⭐⭐</span>
+        <span class="tier-label">Confluencia excepcional</span>
+      </div>
+      <div class="score-raw">Score crudo: 18.8</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">4443.00p</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[4218.44p - 4302.76p]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">3.2%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> BATS.L está en un contexto <strong>T1</strong> (tendencia alcista intacta con pullback a soporte).</p>
+<p><strong>Zona.</strong> La zona detectada está en 4218.44p – 4302.76p (ancho 2.0%, compacta). Anclada en 3 elementos heavy: el AVWAP desde el último pivot bajo como precio promedio de acumulación reciente; una resistencia rota previamente que ahora opera como soporte; la SMA200 como referencia institucional de largo plazo. El precio está a 3.2% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative (3900.00p), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (10)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ 4257.00p</li>
+              
+              <li>POLARIDAD @ 4262.00p</li>
+              
+              <li>POLARIDAD @ 4286.00p</li>
+              
+              <li>POLARIDAD @ 4298.00p</li>
+              
+              <li>AVWAP_pivot_low @ 4222.70p</li>
+              
+              <li>EMA200D @ 4277.82p</li>
+              
+              <li>AVWAP_52w_high @ 4263.20p</li>
+              
+              <li>HVN @ 4266.20p</li>
+              
+              <li>EMA50D @ 4250.38p</li>
+              
+              <li>GAP @ 4298.50p</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 65.9 &middot; RSI_w: 53.5 &middot; MACD: bajando_positivo &middot; Momentum: 0</div>
+            <div>PT: 5153.85p (16.0%) &middot; Buy: 84.6% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="119.8" width="424.0" height="13.0" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="151.0" y2="151.0" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="166.4" y2="166.4" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="181.8" y2="181.8" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,130.0 31.4,118.3 34.8,126.5 38.2,116.6 41.6,115.7 45.0,119.3 48.4,106.3 51.7,122.8 55.1,126.3 58.5,108.0 61.9,68.7 65.3,42.1 68.7,18.2 72.1,33.3 75.5,23.7 78.9,27.6 82.3,29.0 85.7,29.0 89.1,31.6 92.4,40.1 95.8,47.3 99.2,57.5 102.6,75.3 106.0,76.9 109.4,94.6 112.8,104.5 116.2,117.1 119.6,104.2 123.0,89.8 126.4,93.2 129.8,79.2 133.2,76.4 136.5,69.2 139.9,78.1 143.3,75.8 146.7,93.8 150.1,104.8 153.5,114.5 156.9,97.7 160.3,76.3 163.7,61.9 167.1,58.9 170.5,50.7 173.9,55.9 177.2,62.1 180.6,83.8 184.0,68.7 187.4,70.7 190.8,76.7 194.2,68.4 197.6,70.1 201.0,89.8 204.4,95.2 207.8,107.7 211.2,107.6 214.6,106.3 218.0,84.0 221.3,63.3 224.7,64.7 228.1,73.2 231.5,71.6 234.9,92.4 238.3,78.3 241.7,79.0 245.1,63.3 248.5,52.4 251.9,79.2 255.3,78.6 258.7,94.6 262.0,106.0 265.4,108.2 268.8,108.5 272.2,101.5 275.6,131.3 279.0,135.3 282.4,143.3 285.8,125.7 289.2,133.4 292.6,144.7 296.0,143.8 299.4,151.6 302.8,141.6 306.1,146.2 309.5,136.5 312.9,145.9 316.3,129.7 319.7,143.0 323.1,146.5 326.5,139.6 329.9,147.0 333.3,142.7 336.7,147.1 340.1,151.2 343.5,154.2 346.8,161.8 350.2,152.2 353.6,151.0 357.0,127.9 360.4,132.0 363.8,137.0 367.2,138.1 370.6,136.2 374.0,140.8 377.4,141.0 380.8,135.9 384.2,129.0 387.6,138.7 390.9,132.0 394.3,144.2 397.7,146.5 401.1,168.9 404.5,172.6 407.9,169.8 411.3,166.6 414.7,153.5 418.1,141.6 421.5,136.5 424.9,136.5 428.3,131.7 431.6,126.3 435.0,110.0 438.4,96.0 441.8,98.8 445.2,101.8 448.6,106.8 452.0,98.2" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="98.2" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">4962.00p</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">3900.00p</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">27 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive 4100.00p<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural 4000.00p</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative 3900.00p<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-uptrend">
+      <header class="card-head">
+        <strong class="ticker">EDP.LS</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">stoxx600</span>
+          
+        </span>
+        
+        <span class="sector">Utilities</span>
+        <span class="exchange">LIS</span>
+        <span class="badge regime-uptrend">Uptrend: Proximidad a zona</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐⭐</span>
+        <span class="tier-label">Fuerte</span>
+      </div>
+      <div class="score-raw">Score crudo: 16.5</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">€4.72</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[€4.39 - €4.57]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">3.2%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> EDP.LS está en un contexto <strong>T1</strong> (tendencia alcista intacta con pullback a soporte).</p>
+<p><strong>Zona.</strong> La zona detectada está en €4.39 – €4.57 (ancho 4.0%, amplia). Anclada en 2 elementos heavy: una resistencia rota previamente que ahora opera como soporte; la SMA200 como referencia institucional de largo plazo. El precio está a 3.2% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative (€3.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (13)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ €4.40</li>
+              
+              <li>POLARIDAD @ €4.41</li>
+              
+              <li>POLARIDAD @ €4.44</li>
+              
+              <li>POLARIDAD @ €4.45</li>
+              
+              <li>SMA200D @ €4.51</li>
+              
+              <li>POLARIDAD @ €4.51</li>
+              
+              <li>POLARIDAD @ €4.51</li>
+              
+              <li>POLARIDAD @ €4.54</li>
+              
+              <li>POLARIDAD @ €4.54</li>
+              
+              <li>EMA200D @ €4.49</li>
+              
+              <li>HVN @ €4.39</li>
+              
+              <li>SMA50W @ €4.40</li>
+              
+              <li>GAP @ €4.57</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 45.2 &middot; RSI_w: 54.8 &middot; MACD: bajando_negativo &middot; Momentum: 0</div>
+            <div>PT: €5.21 (10.4%) &middot; Buy: 72.7% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="48.1" width="424.0" height="15.4" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="96.6" y2="96.6" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="139.2" y2="139.2" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="181.8" y2="181.8" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,50.3 31.4,41.8 34.8,46.1 38.2,66.7 41.6,62.5 45.0,62.5 48.4,70.1 51.7,56.3 55.1,62.9 58.5,63.4 61.9,62.5 65.3,73.1 68.7,64.2 72.1,63.0 75.5,59.4 78.9,56.7 82.3,58.8 85.7,58.9 89.1,58.8 92.4,60.8 95.8,61.0 99.2,65.3 102.6,68.1 106.0,64.7 109.4,57.5 112.8,65.1 116.2,60.5 119.6,60.5 123.0,60.9 126.4,64.2 129.8,55.5 133.2,56.8 136.5,60.0 139.9,64.8 143.3,61.9 146.7,62.9 150.1,61.9 153.5,58.3 156.9,59.5 160.3,63.9 163.7,53.5 167.1,57.2 170.5,50.0 173.9,47.1 177.2,53.7 180.6,49.5 184.0,38.0 187.4,47.2 190.8,50.1 194.2,55.4 197.6,59.3 201.0,56.6 204.4,52.9 207.8,48.5 211.2,47.1 214.6,52.2 218.0,52.4 221.3,50.1 224.7,49.7 228.1,44.5 231.5,43.4 234.9,45.1 238.3,53.6 241.7,53.7 245.1,59.4 248.5,58.8 251.9,56.5 255.3,56.5 258.7,57.8 262.0,56.8 265.4,51.9 268.8,56.0 272.2,56.9 275.6,52.1 279.0,48.0 282.4,49.3 285.8,50.1 289.2,52.6 292.6,40.4 296.0,46.1 299.4,41.4 302.8,43.9 306.1,42.4 309.5,38.2 312.9,37.1 316.3,39.8 319.7,37.1 323.1,38.8 326.5,35.2 329.9,39.7 333.3,42.6 336.7,41.3 340.1,37.2 343.5,33.2 346.8,34.9 350.2,29.7 353.6,28.8 357.0,44.3 360.4,41.2 363.8,32.7 367.2,24.0 370.6,27.8 374.0,27.2 377.4,23.7 380.8,31.5 384.2,28.9 387.6,25.1 390.9,26.7 394.3,30.3 397.7,24.7 401.1,28.5 404.5,28.3 407.9,30.0 411.3,26.6 414.7,29.2 418.1,30.1 421.5,28.5 424.9,23.0 428.3,19.3 431.6,19.4 435.0,25.8 438.4,18.2 441.8,31.7 445.2,37.0 448.6,31.8 452.0,35.3" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="35.3" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">€4.92</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">€3.00</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">29 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive €4.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural €3.50</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative €3.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-uptrend">
+      <header class="card-head">
+        <strong class="ticker">AZN.L</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">stoxx600</span>
+          
+        </span>
+        
+        <span class="sector">Healthcare</span>
+        <span class="exchange">LSE</span>
+        <span class="badge regime-uptrend">Uptrend: Proximidad a zona</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐</span>
+        <span class="tier-label">Sólida</span>
+      </div>
+      <div class="score-raw">Score crudo: 9.8</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">12648.00p</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[12128.21p - 12206.35p]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">3.5%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> AZN.L está en un contexto <strong>T1</strong> (tendencia alcista intacta con pullback a soporte). MACD virando a positivo.</p>
+<p><strong>Zona.</strong> La zona detectada está en 12128.21p – 12206.35p (ancho 0.6%, compacta). Anclada en 2 elementos heavy: el AVWAP desde earnings como precio promedio de acumulación reciente; la SMA50 como soporte de mediano plazo. El precio está a 3.5% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative (11250.00p), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (3)</h4>
+            <ul>
+              
+              <li>AVWAP_earnings @ 12140.37p</li>
+              
+              <li>SMA50D @ 12148.56p</li>
+              
+              <li>FIB_618 @ 12194.18p</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 58.7 &middot; RSI_w: 49.1 &middot; MACD: subiendo_positivo &middot; Momentum: 2</div>
+            <div>PT: 15682.53p (24.0%) &middot; Buy: 83.3% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="134.2" width="424.0" height="3.9" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="144.5" y2="144.5" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="156.9" y2="156.9" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="181.8" y2="181.8" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,46.4 31.4,49.9 34.8,60.3 38.2,47.5 41.6,69.2 45.0,78.3 48.4,66.6 51.7,79.3 55.1,76.8 58.5,69.7 61.9,57.5 65.3,56.6 68.7,57.9 72.1,63.3 75.5,59.4 78.9,50.9 82.3,47.4 85.7,44.7 89.1,49.1 92.4,46.9 95.8,44.6 99.2,58.1 102.6,54.8 106.0,73.1 109.4,84.1 112.8,84.3 116.2,67.2 119.6,52.0 123.0,54.4 126.4,63.3 129.8,71.6 133.2,66.0 136.5,71.7 139.9,84.8 143.3,80.6 146.7,71.2 150.1,87.1 153.5,83.1 156.9,80.3 160.3,65.4 163.7,49.4 167.1,41.9 170.5,29.1 173.9,30.1 177.2,40.0 180.6,52.2 184.0,18.2 187.4,22.3 190.8,40.0 194.2,26.8 197.6,33.0 201.0,77.1 204.4,103.0 207.8,114.1 211.2,126.4 214.6,116.3 218.0,113.2 221.3,114.9 224.7,125.6 228.1,120.0 231.5,109.6 234.9,110.3 238.3,111.1 241.7,100.3 245.1,97.7 248.5,88.1 251.9,108.7 255.3,113.0 258.7,169.4 262.0,157.4 265.4,142.7 268.8,152.0 272.2,149.7 275.6,145.0 279.0,152.3 282.4,159.3 285.8,159.0 289.2,171.4 292.6,166.4 296.0,154.1 299.4,142.0 302.8,140.1 306.1,132.5 309.5,139.0 312.9,120.8 316.3,132.8 319.7,138.8 323.1,146.0 326.5,146.4 329.9,145.7 333.3,137.2 336.7,144.2 340.1,142.4 343.5,150.7 346.8,161.9 350.2,156.5 353.6,159.0 357.0,136.8 360.4,138.7 363.8,137.7 367.2,123.2 370.6,119.6 374.0,116.6 377.4,111.0 380.8,123.1 384.2,124.6 387.6,117.0 390.9,120.0 394.3,123.2 397.7,130.6 401.1,142.9 404.5,151.0 407.9,156.2 411.3,146.6 414.7,135.5 418.1,149.9 421.5,144.6 424.9,143.2 428.3,149.7 431.6,129.6 435.0,109.8 438.4,122.3 441.8,124.6 445.2,113.7 448.6,113.9 452.0,112.2" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="112.2" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">14538.00p</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">11250.00p</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">27 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive 12000.00p<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural 11750.00p</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative 11250.00p<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+      <section class="candles">
+        <h4>Confirmación por velas (informativo)</h4>
+        <ul>
+          
+          <li>Reclamo de cuerpo (morning star)</li>
+          
+        </ul>
+      </section>
+      
+    </article>
+    
+    <article class="card regime-uptrend">
+      <header class="card-head">
+        <strong class="ticker">DDOG</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">nasdaq100</span>
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Technology</span>
+        <span class="exchange">NMS</span>
+        <span class="badge regime-uptrend">Uptrend: Proximidad a zona</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐</span>
+        <span class="tier-label">Borderline</span>
+      </div>
+      <div class="score-raw">Score crudo: 8.8</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$273.09</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$251.74 - $255.11]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">6.6%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> DDOG está en un contexto <strong>T1</strong> (tendencia alcista intacta con pullback a soporte). MACD virando a positivo.</p>
+<p><strong>Zona.</strong> La zona detectada está en $251.74 – $255.11 (ancho 1.3%, compacta). Anclada en 2 elementos heavy: una resistencia rota previamente que ahora opera como soporte; el AVWAP desde el último pivot bajo como precio promedio de acumulación reciente. El precio está a 6.6% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($210.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (3)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ $251.99</li>
+              
+              <li>AVWAP_pivot_low @ $253.38</li>
+              
+              <li>EMA50D @ $254.86</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 55.3 &middot; RSI_w: 59.1 &middot; MACD: subiendo_negativo &middot; Momentum: 1</div>
+            <div>PT: $292.36 (7.1%) &middot; Buy: 91.7% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="55.9" width="424.0" height="3.3" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="65.9" y2="65.9" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="75.8" y2="75.8" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="100.6" y2="100.6" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,181.8 31.4,180.2 34.8,177.1 38.2,178.2 41.6,175.8 45.0,177.5 48.4,169.3 51.7,163.2 55.1,164.1 58.5,166.1 61.9,121.6 65.3,110.3 68.7,108.2 72.1,110.5 75.5,105.2 78.9,107.6 82.3,102.6 85.7,101.7 89.1,95.5 92.4,98.3 95.8,92.6 99.2,88.4 102.6,87.0 106.0,88.9 109.4,85.5 112.8,63.6 116.2,33.8 119.6,42.1 123.0,60.7 126.4,67.3 129.8,76.7 133.2,79.1 136.5,83.4 139.9,83.1 143.3,76.6 146.7,80.9 150.1,77.7 153.5,79.7 156.9,84.1 160.3,87.7 163.7,89.3 167.1,90.1 170.5,88.0 173.9,89.7 177.2,71.1 180.6,62.4 184.0,50.7 187.4,46.7 190.8,50.7 194.2,55.7 197.6,54.2 201.0,50.0 204.4,42.2 207.8,53.5 211.2,50.8 214.6,40.5 218.0,46.7 221.3,48.8 224.7,52.4 228.1,47.9 231.5,56.2 234.9,65.2 238.3,66.5 241.7,64.1 245.1,59.1 248.5,60.1 251.9,46.9 255.3,42.6 258.7,43.2 262.0,37.6 265.4,23.2 268.8,28.2 272.2,81.5 275.6,76.9 279.0,50.3 282.4,64.2 285.8,70.0 289.2,58.8 292.6,55.6 296.0,63.6 299.4,64.9 302.8,77.3 306.1,78.2 309.5,75.2 312.9,85.0 316.3,87.7 319.7,83.1 323.1,68.0 326.5,73.9 329.9,73.8 333.3,86.9 336.7,101.3 340.1,95.8 343.5,97.7 346.8,100.3 350.2,85.4 353.6,89.0 357.0,89.5 360.4,80.7 363.8,80.5 367.2,80.0 370.6,74.8 374.0,80.8 377.4,65.9 380.8,63.5 384.2,59.5 387.6,54.1 390.9,43.0 394.3,42.5 397.7,42.6 401.1,37.4 404.5,34.8 407.9,34.1 411.3,34.8 414.7,33.0 418.1,39.9 421.5,37.4 424.9,18.2 428.3,24.1 431.6,28.0 435.0,41.9 438.4,44.9 441.8,63.8 445.2,50.7 448.6,54.6 452.0,38.1" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="38.1" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$293.26</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$127.86</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $245.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $235.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $210.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-uptrend">
+      <header class="card-head">
+        <strong class="ticker">CVS</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Healthcare</span>
+        <span class="exchange">NYQ</span>
+        <span class="badge regime-uptrend">Uptrend: Proximidad a zona</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐</span>
+        <span class="tier-label">Borderline</span>
+      </div>
+      <div class="score-raw">Score crudo: 8.5</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$93.45</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$86.12 - $89.06]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">4.7%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> CVS está en un contexto <strong>T1</strong> (tendencia alcista intacta con pullback a soporte). MACD virando a positivo.</p>
+<p><strong>Zona.</strong> La zona detectada está en $86.12 – $89.06 (ancho 3.4%, ajustada). Anclada en 2 elementos heavy: la SMA200 como referencia institucional de largo plazo; el AVWAP desde el último pivot bajo como precio promedio de acumulación reciente. El precio está a 4.7% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($79.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (6)</h4>
+            <ul>
+              
+              <li>SMA200D @ $88.39</li>
+              
+              <li>AVWAP_pivot_low @ $88.88</li>
+              
+              <li>EMA200D @ $88.97</li>
+              
+              <li>SMA50W @ $87.02</li>
+              
+              <li>FIB_618 @ $87.75</li>
+              
+              <li>FIB_786 @ $86.20</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 59.1 &middot; RSI_w: 52.1 &middot; MACD: subiendo_positivo &middot; Momentum: 1</div>
+            <div>PT: $115.48 (23.6%) &middot; Buy: 92.6% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="126.1" width="424.0" height="14.7" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="146.4" y2="146.4" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="156.5" y2="156.5" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="176.5" y2="176.5" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,177.2 31.4,181.8 34.8,179.7 38.2,166.6 41.6,152.0 45.0,155.0 48.4,161.0 51.7,161.4 55.1,168.0 58.5,137.1 61.9,134.6 65.3,118.6 68.7,110.3 72.1,95.6 75.5,80.8 78.9,85.6 82.3,91.9 85.7,91.4 89.1,100.5 92.4,105.0 95.8,104.8 99.2,105.1 102.6,117.7 106.0,111.0 109.4,106.5 112.8,116.5 116.2,118.3 119.6,123.9 123.0,114.5 126.4,97.2 129.8,91.7 133.2,85.9 136.5,86.0 139.9,81.2 143.3,68.9 146.7,61.5 150.1,67.9 153.5,67.7 156.9,75.5 160.3,79.7 163.7,64.8 167.1,63.4 170.5,61.9 173.9,47.9 177.2,49.5 180.6,53.4 184.0,54.0 187.4,47.2 190.8,47.6 194.2,60.9 197.6,49.6 201.0,48.9 204.4,57.2 207.8,50.5 211.2,41.7 214.6,40.3 218.0,41.7 221.3,38.7 224.7,33.9 228.1,33.2 231.5,18.2 234.9,30.8 238.3,36.8 241.7,32.5 245.1,35.9 248.5,24.5 251.9,41.6 255.3,45.1 258.7,49.1 262.0,44.4 265.4,49.1 268.8,75.7 272.2,90.2 275.6,92.8 279.0,93.0 282.4,103.9 285.8,97.7 289.2,96.4 292.6,85.5 296.0,101.3 299.4,96.8 302.8,103.1 306.1,103.1 309.5,106.3 312.9,100.8 316.3,106.9 319.7,99.7 323.1,106.8 326.5,106.1 329.9,101.8 333.3,83.3 336.7,85.2 340.1,85.3 343.5,87.6 346.8,91.0 350.2,94.4 353.6,94.9 357.0,98.0 360.4,93.6 363.8,98.9 367.2,112.8 370.6,120.0 374.0,127.2 377.4,133.4 380.8,135.9 384.2,142.1 387.6,146.2 390.9,125.8 394.3,132.2 397.7,135.9 401.1,143.0 404.5,145.4 407.9,139.1 411.3,136.4 414.7,139.3 418.1,131.7 421.5,132.4 424.9,140.6 428.3,132.7 431.6,133.7 435.0,119.4 438.4,108.5 441.8,109.6 445.2,108.0 448.6,97.6 452.0,104.1" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="104.1" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$110.60</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$77.94</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $85.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $83.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $79.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-uptrend">
+      <header class="card-head">
+        <strong class="ticker">EVRG</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Utilities</span>
+        <span class="exchange">NMS</span>
+        <span class="badge regime-uptrend">Uptrend: Proximidad a zona</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐</span>
+        <span class="tier-label">Borderline</span>
+      </div>
+      <div class="score-raw">Score crudo: 7.5</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$83.15</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$77.01 - $77.79]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">6.4%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> EVRG está en un contexto <strong>T1</strong> (tendencia alcista intacta con pullback a soporte).</p>
+<p><strong>Zona.</strong> La zona detectada está en $77.01 – $77.79 (ancho 1.0%, compacta). Anclada en una resistencia rota previamente que ahora opera como soporte. El precio está a 6.4% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($73.00), conviene revisar la tesis. Earnings en 14 días — considerar dimensionar la posición para evento o evitar strikes que asignen alrededor del reporte. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (3)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ $77.51</li>
+              
+              <li>POLARIDAD @ $77.71</li>
+              
+              <li>HVN @ $77.09</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 60.9 &middot; RSI_w: 53.7 &middot; MACD: bajando_positivo &middot; Momentum: 0</div>
+            <div>PT: $89.25 (7.3%) &middot; Buy: 64.3% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="130.0" width="424.0" height="8.4" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="149.4" y2="149.4" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="160.2" y2="160.2" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="181.8" y2="181.8" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,85.7 31.4,92.8 34.8,88.9 38.2,85.3 41.6,91.7 45.0,75.4 48.4,77.9 51.7,83.6 55.1,88.7 58.5,95.4 61.9,76.6 65.3,86.9 68.7,69.0 72.1,70.4 75.5,79.5 78.9,76.6 82.3,100.7 85.7,84.9 89.1,74.0 92.4,71.9 95.8,66.6 99.2,63.5 102.6,61.7 106.0,61.0 109.4,75.3 112.8,84.0 116.2,101.9 119.6,91.5 123.0,94.5 126.4,85.7 129.8,70.7 133.2,87.8 136.5,81.6 139.9,75.5 143.3,75.7 146.7,64.5 150.1,68.9 153.5,63.2 156.9,75.3 160.3,79.1 163.7,71.0 167.1,53.8 170.5,43.2 173.9,34.1 177.2,28.1 180.6,30.3 184.0,36.6 187.4,39.2 190.8,18.2 194.2,38.3 197.6,29.1 201.0,42.2 204.4,49.0 207.8,44.4 211.2,36.4 214.6,36.4 218.0,47.5 221.3,35.2 224.7,45.7 228.1,50.3 231.5,52.9 234.9,35.2 238.3,34.2 241.7,28.5 245.1,42.9 248.5,44.9 251.9,62.8 255.3,71.0 258.7,73.6 262.0,71.2 265.4,64.6 268.8,73.0 272.2,73.4 275.6,69.6 279.0,83.5 282.4,84.2 285.8,70.2 289.2,68.4 292.6,62.5 296.0,63.6 299.4,69.1 302.8,67.4 306.1,71.9 309.5,96.2 312.9,91.1 316.3,90.9 319.7,82.0 323.1,90.8 326.5,99.1 329.9,95.1 333.3,89.7 336.7,97.8 340.1,85.2 343.5,89.5 346.8,81.9 350.2,92.9 353.6,91.4 357.0,88.6 360.4,96.8 363.8,103.9 367.2,101.9 370.6,97.0 374.0,108.5 377.4,114.1 380.8,114.0 384.2,123.2 387.6,131.4 390.9,127.3 394.3,128.7 397.7,119.8 401.1,123.0 404.5,119.2 407.9,115.1 411.3,116.0 414.7,102.3 418.1,102.9 421.5,100.5 424.9,95.7 428.3,89.9 431.6,83.1 435.0,77.2 438.4,89.1 441.8,70.4 445.2,87.8 448.6,75.2 452.0,72.0" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="72.0" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$88.13</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$73.00</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $76.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $75.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $73.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+      <section class="flags warning">
+        <h4>&#9888; Flags</h4>
+        <ul>
+          
+          <li>Earnings en 14 días (2026-11-05)</li>
+          
+        </ul>
+      </section>
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-uptrend">
+      <header class="card-head">
+        <strong class="ticker">CS.PA</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">stoxx600</span>
+          
+        </span>
+        
+        <span class="sector">Financial Services</span>
+        <span class="exchange">PAR</span>
+        <span class="badge regime-uptrend">Uptrend: Proximidad a zona</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐</span>
+        <span class="tier-label">Borderline</span>
+      </div>
+      <div class="score-raw">Score crudo: 7.0</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">€41.94</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[€38.93 - €39.59]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">5.6%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> CS.PA está en un contexto <strong>T1</strong> (tendencia alcista intacta con pullback a soporte). MACD virando a positivo.</p>
+<p><strong>Zona.</strong> La zona detectada está en €38.93 – €39.59 (ancho 1.7%, compacta). Anclada en una resistencia rota previamente que ahora opera como soporte. El precio está a 5.6% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative (€36.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (4)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ €38.97</li>
+              
+              <li>POLARIDAD @ €39.15</li>
+              
+              <li>POLARIDAD @ €39.55</li>
+              
+              <li>HVN @ €39.28</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 42.8 &middot; RSI_w: 47.2 &middot; MACD: subiendo_positivo &middot; Momentum: 2</div>
+            <div>PT: €52.15 (24.4%) &middot; Buy: 83.3% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="120.4" width="424.0" height="11.3" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="147.6" y2="147.6" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="164.7" y2="164.7" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="181.8" y2="181.8" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,109.5 31.4,97.3 34.8,112.2 38.2,108.5 41.6,82.6 45.0,86.4 48.4,95.6 51.7,122.0 55.1,128.8 58.5,132.2 61.9,122.3 65.3,127.4 68.7,112.4 72.1,107.8 75.5,107.3 78.9,111.5 82.3,111.4 85.7,105.4 89.1,106.1 92.4,103.7 95.8,118.2 99.2,118.0 102.6,120.8 106.0,117.2 109.4,130.0 112.8,123.0 116.2,121.6 119.6,118.6 123.0,110.5 126.4,104.4 129.8,105.4 133.2,98.7 136.5,81.3 139.9,73.2 143.3,70.2 146.7,72.4 150.1,70.7 153.5,65.4 156.9,66.9 160.3,65.5 163.7,60.6 167.1,55.1 170.5,55.5 173.9,47.6 177.2,53.6 180.6,47.9 184.0,50.0 187.4,42.1 190.8,39.9 194.2,44.9 197.6,39.9 201.0,40.4 204.4,39.6 207.8,39.7 211.2,46.1 214.6,36.5 218.0,31.3 221.3,32.0 224.7,31.5 228.1,29.5 231.5,32.0 234.9,30.8 238.3,24.7 241.7,18.2 245.1,27.8 248.5,24.2 251.9,29.0 255.3,34.3 258.7,34.3 262.0,33.6 265.4,27.1 268.8,27.1 272.2,29.5 275.6,30.8 279.0,32.5 282.4,34.1 285.8,27.1 289.2,34.6 292.6,35.6 296.0,45.4 299.4,53.1 302.8,49.8 306.1,43.1 309.5,50.5 312.9,50.0 316.3,63.5 319.7,51.7 323.1,60.4 326.5,50.0 329.9,56.8 333.3,41.4 336.7,34.1 340.1,45.2 343.5,50.8 346.8,63.2 350.2,62.6 353.6,58.9 357.0,50.7 360.4,51.5 363.8,41.4 367.2,26.9 370.6,32.5 374.0,30.7 377.4,46.6 380.8,58.5 384.2,45.5 387.6,45.0 390.9,45.4 394.3,53.7 397.7,70.0 401.1,80.9 404.5,78.0 407.9,76.7 411.3,66.1 414.7,78.7 418.1,89.1 421.5,87.4 424.9,82.5 428.3,79.1 431.6,71.5 435.0,64.7 438.4,62.6 441.8,72.0 445.2,64.7 448.6,58.7 452.0,80.3" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="80.3" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">€45.57</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">€36.00</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">29 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive €38.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural €37.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative €36.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-downtrend">
+      <header class="card-head">
+        <strong class="ticker">EL</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Consumer Defensive</span>
+        <span class="exchange">NYQ</span>
+        <span class="badge regime-downtrend">Downtrend: Doble piso confirmado</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐⭐</span>
+        <span class="tier-label">Fuerte</span>
+      </div>
+      <div class="score-raw">Score crudo: 14.5</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$103.66</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$91.07 - $94.58]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">8.8%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> EL está en un contexto <strong>T2</strong> (pánico de mercado o spike de IV).</p>
+<p><strong>Zona.</strong> La zona detectada está en $91.07 – $94.58 (ancho 3.8%, amplia). Anclada en 2 elementos heavy: la SMA200 como referencia institucional de largo plazo; una resistencia rota previamente que ahora opera como soporte. El precio está a 8.8% del techo de la zona, al límite del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($80.00), conviene revisar la tesis. Earnings en 11 días — considerar dimensionar la posición para evento o evitar strikes que asignen alrededor del reporte. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (11)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ $91.54</li>
+              
+              <li>SMA200D @ $91.68</li>
+              
+              <li>POLARIDAD @ $92.35</li>
+              
+              <li>POLARIDAD @ $93.40</li>
+              
+              <li>EMA200D @ $91.45</li>
+              
+              <li>HVN @ $91.16</li>
+              
+              <li>SMA50W @ $93.35</li>
+              
+              <li>HVN @ $94.48</li>
+              
+              <li>FIB_618 @ $94.40</li>
+              
+              <li>GAP @ $92.83</li>
+              
+              <li>FIB_786 @ $91.89</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 59.6 &middot; RSI_w: 59.8 &middot; MACD: bajando_positivo &middot; Momentum: 0</div>
+            <div>PT: $109.02 (5.2%) &middot; Buy: 50.0% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="83.7" width="424.0" height="18.2" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="107.5" y2="107.5" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="120.5" y2="120.5" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="159.4" y2="159.4" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,178.1 31.4,170.8 34.8,173.4 38.2,174.5 41.6,181.8 45.0,176.5 48.4,163.1 51.7,152.5 55.1,144.6 58.5,124.8 61.9,131.9 65.3,127.2 68.7,145.1 72.1,134.0 75.5,148.4 78.9,155.1 82.3,158.0 85.7,159.4 89.1,179.5 92.4,168.8 95.8,165.1 99.2,116.2 102.6,125.1 106.0,101.2 109.4,103.0 112.8,112.9 116.2,130.4 119.6,141.7 123.0,148.8 126.4,144.4 129.8,141.3 133.2,135.3 136.5,125.4 139.9,131.4 143.3,117.8 146.7,109.1 150.1,107.5 153.5,120.1 156.9,146.6 160.3,134.4 163.7,135.9 167.1,139.9 170.5,142.4 173.9,151.6 177.2,156.6 180.6,162.7 184.0,164.9 187.4,146.6 190.8,140.2 194.2,134.0 197.6,136.4 201.0,150.1 204.4,149.1 207.8,145.6 211.2,153.5 214.6,155.0 218.0,147.4 221.3,144.7 224.7,148.4 228.1,140.5 231.5,147.1 234.9,145.8 238.3,159.8 241.7,157.9 245.1,142.8 248.5,134.8 251.9,138.0 255.3,134.1 258.7,139.2 262.0,135.1 265.4,123.2 268.8,123.3 272.2,130.9 275.6,116.1 279.0,122.1 282.4,119.0 285.8,119.5 289.2,121.4 292.6,127.7 296.0,136.9 299.4,137.2 302.8,65.9 306.1,75.5 309.5,45.5 312.9,34.1 316.3,30.3 319.7,29.2 323.1,23.3 326.5,37.9 329.9,43.6 333.3,55.5 336.7,49.6 340.1,51.1 343.5,35.5 346.8,46.8 350.2,61.9 353.6,73.9 357.0,70.5 360.4,64.8 363.8,75.0 367.2,78.4 370.6,87.4 374.0,89.7 377.4,74.5 380.8,54.0 384.2,61.6 387.6,79.6 390.9,84.3 394.3,78.5 397.7,84.8 401.1,93.1 404.5,106.5 407.9,97.2 411.3,90.3 414.7,90.0 418.1,84.4 421.5,85.0 424.9,65.7 428.3,55.3 431.6,56.9 435.0,47.3 438.4,18.2 441.8,31.9 445.2,25.5 448.6,23.7 452.0,36.5" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="36.5" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$107.19</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$75.69</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $90.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $87.50</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $80.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+      <section class="flags warning">
+        <h4>&#9888; Flags</h4>
+        <ul>
+          
+          <li>Earnings en 11 días (2026-11-02)</li>
+          
+        </ul>
+      </section>
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-downtrend">
+      <header class="card-head">
+        <strong class="ticker">DHR</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Healthcare</span>
+        <span class="exchange">NYQ</span>
+        <span class="badge regime-downtrend">Downtrend: Doble piso confirmado</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐</span>
+        <span class="tier-label">Sólida</span>
+      </div>
+      <div class="score-raw">Score crudo: 12.5</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$233.86</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$218.84 - $225.01]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">3.8%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> DHR está en un contexto <strong>T2</strong> (pánico de mercado o spike de IV).</p>
+<p><strong>Zona.</strong> La zona detectada está en $218.84 – $225.01 (ancho 2.8%, ajustada). Anclada en 3 elementos heavy: una resistencia rota previamente que ahora opera como soporte; la SMA200 como referencia institucional de largo plazo; el AVWAP desde el último pivot bajo como precio promedio de acumulación reciente. El precio está a 3.8% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($197.50), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (6)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ $220.67</li>
+              
+              <li>SMA200W @ $221.00</li>
+              
+              <li>AVWAP_pivot_low @ $222.49</li>
+              
+              <li>HVN @ $219.06</li>
+              
+              <li>HVN @ $224.79</li>
+              
+              <li>FIB_618 @ $219.84</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 64.5 &middot; RSI_w: 63.3 &middot; MACD: bajando_positivo &middot; Momentum: 0</div>
+            <div>PT: $244.14 (4.4%) &middot; Buy: 84.0% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="38.3" width="424.0" height="14.0" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="61.1" y2="61.1" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="72.4" y2="72.4" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="100.9" y2="100.9" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,143.9 31.4,146.9 34.8,139.3 38.2,143.0 41.6,143.4 45.0,143.1 48.4,151.7 51.7,154.2 55.1,152.9 58.5,152.2 61.9,150.5 65.3,160.8 68.7,171.3 72.1,171.9 75.5,172.5 78.9,175.8 82.3,181.8 85.7,177.4 89.1,170.2 92.4,160.9 95.8,155.8 99.2,158.9 102.6,157.0 106.0,156.3 109.4,139.2 112.8,134.6 116.2,141.0 119.6,149.5 123.0,145.0 126.4,125.6 129.8,130.9 133.2,132.6 136.5,121.5 139.9,132.4 143.3,138.9 146.7,140.4 150.1,138.2 153.5,137.6 156.9,145.8 160.3,147.1 163.7,144.8 167.1,143.0 170.5,120.5 173.9,110.6 177.2,103.9 180.6,111.6 184.0,116.8 187.4,109.5 190.8,99.9 194.2,109.7 197.6,108.4 201.0,116.2 204.4,104.3 207.8,97.4 211.2,94.8 214.6,97.4 218.0,93.4 221.3,83.8 224.7,86.5 228.1,92.7 231.5,142.9 234.9,142.6 238.3,112.2 241.7,114.5 245.1,103.1 248.5,97.4 251.9,103.2 255.3,103.9 258.7,106.6 262.0,100.9 265.4,107.1 268.8,96.0 272.2,95.2 275.6,84.4 279.0,73.9 282.4,78.3 285.8,82.0 289.2,86.3 292.6,89.6 296.0,89.2 299.4,96.1 302.8,69.0 306.1,59.0 309.5,52.3 312.9,60.8 316.3,58.9 319.7,60.3 323.1,59.5 326.5,58.6 329.9,64.4 333.3,79.4 336.7,72.7 340.1,70.1 343.5,77.8 346.8,83.3 350.2,84.2 353.6,94.0 357.0,94.9 360.4,87.8 363.8,73.9 367.2,76.2 370.6,66.8 374.0,68.3 377.4,59.2 380.8,47.2 384.2,46.2 387.6,41.1 390.9,39.5 394.3,33.0 397.7,35.8 401.1,46.2 404.5,68.4 407.9,63.2 411.3,47.0 414.7,59.7 418.1,53.1 421.5,55.5 424.9,50.1 428.3,47.0 431.6,43.2 435.0,39.0 438.4,23.5 441.8,29.1 445.2,39.6 448.6,40.1 452.0,18.2" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="18.2" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$233.86</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$161.91</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $215.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $210.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $197.50<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+      <section class="candles">
+        <h4>Confirmación por velas (informativo)</h4>
+        <ul>
+          
+          <li>Vela de momentum bajista</li>
+          
+          <li>Reclamo de cuerpo (engulfing)</li>
+          
+        </ul>
+      </section>
+      
+    </article>
+    
+    <article class="card regime-downtrend">
+      <header class="card-head">
+        <strong class="ticker">CDW</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Technology</span>
+        <span class="exchange">NMS</span>
+        <span class="badge regime-downtrend">Downtrend: Doble piso confirmado</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐</span>
+        <span class="tier-label">Sólida</span>
+      </div>
+      <div class="score-raw">Score crudo: 12.0</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$158.28</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$141.32 - $145.94]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">7.8%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> CDW está en un contexto <strong>T2</strong> (pánico de mercado o spike de IV).</p>
+<p><strong>Zona.</strong> La zona detectada está en $141.32 – $145.94 (ancho 3.2%, ajustada). Anclada en 3 elementos heavy: una resistencia rota previamente que ahora opera como soporte; el AVWAP desde earnings como precio promedio de acumulación reciente; la SMA50 como soporte de mediano plazo. El precio está a 7.8% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($125.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (10)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ $141.46</li>
+              
+              <li>POLARIDAD @ $142.97</li>
+              
+              <li>POLARIDAD @ $143.64</li>
+              
+              <li>POLARIDAD @ $144.33</li>
+              
+              <li>POLARIDAD @ $144.46</li>
+              
+              <li>POLARIDAD @ $145.80</li>
+              
+              <li>AVWAP_earnings @ $142.64</li>
+              
+              <li>SMA50D @ $143.54</li>
+              
+              <li>AVWAP_pivot_low @ $144.50</li>
+              
+              <li>EMA50D @ $143.35</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 65.8 &middot; RSI_w: 60.5 &middot; MACD: neutral &middot; Momentum: 0</div>
+            <div>PT: $158.67 (0.2%) &middot; Buy: 70.0% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="52.4" width="424.0" height="12.8" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="68.9" y2="68.9" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="82.8" y2="82.8" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="110.5" y2="110.5" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,78.7 31.4,81.9 34.8,88.0 38.2,88.5 41.6,81.2 45.0,77.5 48.4,79.9 51.7,81.9 55.1,77.8 58.5,154.9 61.9,151.6 65.3,166.6 68.7,172.8 72.1,181.8 75.5,178.8 78.9,173.9 82.3,174.1 85.7,168.7 89.1,167.8 92.4,162.6 95.8,160.8 99.2,149.9 102.6,156.0 106.0,140.5 109.4,135.0 112.8,109.3 116.2,66.2 119.6,69.7 123.0,76.4 126.4,70.4 129.8,88.2 133.2,83.3 136.5,87.4 139.9,98.6 143.3,99.1 146.7,90.6 150.1,93.0 153.5,96.4 156.9,105.8 160.3,101.2 163.7,114.5 167.1,96.5 170.5,96.0 173.9,102.1 177.2,87.5 180.6,69.4 184.0,67.1 187.4,73.3 190.8,87.3 194.2,85.0 197.6,71.0 201.0,75.2 204.4,68.3 207.8,56.7 211.2,56.8 214.6,70.6 218.0,94.3 221.3,84.6 224.7,87.7 228.1,96.6 231.5,97.4 234.9,97.1 238.3,96.1 241.7,86.0 245.1,74.3 248.5,57.7 251.9,46.9 255.3,53.5 258.7,47.2 262.0,47.5 265.4,30.1 268.8,68.6 272.2,63.4 275.6,80.5 279.0,78.8 282.4,81.7 285.8,78.1 289.2,63.2 292.6,70.5 296.0,81.9 299.4,82.9 302.8,76.7 306.1,86.8 309.5,76.5 312.9,89.7 316.3,63.1 319.7,64.8 323.1,44.0 326.5,47.6 329.9,36.8 333.3,40.3 336.7,44.8 340.1,30.3 343.5,34.6 346.8,56.5 350.2,62.3 353.6,61.7 357.0,30.6 360.4,36.4 363.8,30.8 367.2,41.3 370.6,43.4 374.0,51.7 377.4,51.1 380.8,48.3 384.2,51.8 387.6,70.4 390.9,81.6 394.3,95.7 397.7,97.4 401.1,101.7 404.5,80.5 407.9,87.5 411.3,85.8 414.7,80.9 418.1,77.7 421.5,69.2 424.9,62.9 428.3,58.5 431.6,35.7 435.0,40.9 438.4,29.1 441.8,39.8 445.2,33.8 448.6,27.3 452.0,18.2" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="18.2" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$158.28</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$99.30</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $140.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $135.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $125.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-downtrend">
+      <header class="card-head">
+        <strong class="ticker">AJG</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Financial Services</span>
+        <span class="exchange">NYQ</span>
+        <span class="badge regime-downtrend">Downtrend: Doble piso confirmado</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐</span>
+        <span class="tier-label">Sólida</span>
+      </div>
+      <div class="score-raw">Score crudo: 10.9</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$258.37</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$230.87 - $236.05]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">8.6%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> AJG está en un contexto <strong>T2</strong> (pánico de mercado o spike de IV). MACD virando a positivo.</p>
+<p><strong>Zona.</strong> La zona detectada está en $230.87 – $236.05 (ancho 2.2%, ajustada). Anclada en 2 elementos heavy: una resistencia rota previamente que ahora opera como soporte; la SMA200 como referencia institucional de largo plazo. El precio está a 8.6% del techo de la zona, al límite del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($210.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (5)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ $231.10</li>
+              
+              <li>SMA200D @ $231.85</li>
+              
+              <li>AVWAP_52w_high @ $233.59</li>
+              
+              <li>SMA50W @ $235.81</li>
+              
+              <li>FIB_618 @ $234.44</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 66.2 &middot; RSI_w: 58.2 &middot; MACD: subiendo_positivo &middot; Momentum: 1</div>
+            <div>PT: $283.33 (9.7%) &middot; Buy: 69.6% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="91.7" width="424.0" height="10.6" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="114.3" y2="114.3" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="124.5" y2="124.5" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="145.0" y2="145.0" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,125.8 31.4,134.0 34.8,134.6 38.2,138.0 41.6,141.3 45.0,152.4 48.4,148.9 51.7,151.1 55.1,153.6 58.5,171.8 61.9,161.5 65.3,167.8 68.7,168.4 72.1,170.8 75.5,181.8 78.9,170.2 82.3,165.6 85.7,150.8 89.1,158.4 92.4,158.1 95.8,150.3 99.2,155.7 102.6,157.4 106.0,159.6 109.4,160.0 112.8,163.2 116.2,153.0 119.6,153.6 123.0,160.3 126.4,142.9 129.8,132.4 133.2,139.8 136.5,130.6 139.9,124.3 143.3,122.7 146.7,127.2 150.1,133.3 153.5,132.9 156.9,132.5 160.3,136.7 163.7,146.9 167.1,133.2 170.5,123.0 173.9,128.9 177.2,112.2 180.6,110.0 184.0,105.0 187.4,84.3 190.8,58.2 194.2,63.6 197.6,53.6 201.0,49.6 204.4,55.5 207.8,56.8 211.2,40.2 214.6,55.3 218.0,67.7 221.3,51.0 224.7,55.2 228.1,55.7 231.5,66.8 234.9,78.5 238.3,79.1 241.7,67.7 245.1,56.3 248.5,31.8 251.9,24.5 255.3,50.0 258.7,64.4 262.0,67.7 265.4,67.1 268.8,61.1 272.2,59.6 275.6,67.0 279.0,58.2 282.4,56.0 285.8,52.0 289.2,56.0 292.6,60.7 296.0,67.3 299.4,66.5 302.8,47.9 306.1,43.5 309.5,34.9 312.9,18.2 316.3,25.3 319.7,32.4 323.1,42.4 326.5,27.2 329.9,38.3 333.3,38.6 336.7,33.6 340.1,29.1 343.5,37.2 346.8,60.2 350.2,74.9 353.6,76.9 357.0,83.0 360.4,56.4 363.8,67.2 367.2,75.9 370.6,80.7 374.0,84.7 377.4,90.6 380.8,103.2 384.2,104.8 387.6,110.0 390.9,101.8 394.3,105.2 397.7,108.7 401.1,107.9 404.5,100.4 407.9,112.0 411.3,109.7 414.7,104.4 418.1,110.0 421.5,95.8 424.9,98.6 428.3,96.1 431.6,98.1 435.0,89.7 438.4,63.0 441.8,53.2 445.2,57.0 448.6,44.2 452.0,46.0" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="46.0" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$271.99</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$192.00</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $225.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $220.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $210.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-downtrend">
+      <header class="card-head">
+        <strong class="ticker">BR</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Technology</span>
+        <span class="exchange">NYQ</span>
+        <span class="badge regime-downtrend">Downtrend: Doble piso confirmado</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐</span>
+        <span class="tier-label">Sólida</span>
+      </div>
+      <div class="score-raw">Score crudo: 9.3</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$178.30</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$166.89 - $168.92]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">5.3%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> BR está en un contexto <strong>T2</strong> (pánico de mercado o spike de IV). MACD virando a positivo.</p>
+<p><strong>Zona.</strong> La zona detectada está en $166.89 – $168.92 (ancho 1.2%, compacta). Anclada en 2 elementos heavy: la SMA200 como referencia institucional de largo plazo; el AVWAP desde el último pivot bajo como precio promedio de acumulación reciente. El precio está a 5.3% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($155.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (3)</h4>
+            <ul>
+              
+              <li>SMA200D @ $167.39</li>
+              
+              <li>AVWAP_pivot_low @ $168.75</li>
+              
+              <li>EMA50D @ $167.06</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 68.0 &middot; RSI_w: 57.0 &middot; MACD: subiendo_positivo &middot; Momentum: 1</div>
+            <div>PT: $213.38 (19.7%) &middot; Buy: 55.6% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="72.3" width="424.0" height="6.7" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="85.1" y2="85.1" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="93.3" y2="93.3" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="117.8" y2="117.8" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,114.7 31.4,117.6 34.8,113.4 38.2,105.3 41.6,99.0 45.0,121.2 48.4,117.0 51.7,121.6 55.1,127.2 58.5,124.9 61.9,124.7 65.3,135.8 68.7,137.0 72.1,135.7 75.5,154.0 78.9,155.9 82.3,148.5 85.7,132.1 89.1,136.0 92.4,136.8 95.8,134.1 99.2,132.6 102.6,144.2 106.0,143.7 109.4,135.1 112.8,122.0 116.2,101.6 119.6,118.4 123.0,125.7 126.4,120.8 129.8,129.8 133.2,137.5 136.5,134.0 139.9,145.8 143.3,151.0 146.7,151.0 150.1,157.8 153.5,154.2 156.9,168.1 160.3,174.8 163.7,179.3 167.1,178.9 170.5,166.6 173.9,179.1 177.2,173.7 180.6,181.8 184.0,176.9 187.4,163.9 190.8,154.0 194.2,151.3 197.6,138.8 201.0,143.8 204.4,142.9 207.8,142.5 211.2,130.8 214.6,147.2 218.0,142.7 221.3,124.2 224.7,134.5 228.1,134.1 231.5,150.5 234.9,153.4 238.3,152.5 241.7,137.7 245.1,125.1 248.5,107.4 251.9,104.1 255.3,118.6 258.7,121.3 262.0,110.2 265.4,73.9 268.8,90.3 272.2,85.9 275.6,80.2 279.0,57.6 282.4,66.3 285.8,71.1 289.2,61.4 292.6,65.4 296.0,75.8 299.4,69.2 302.8,49.0 306.1,40.9 309.5,28.9 312.9,18.2 316.3,20.2 319.7,30.8 323.1,25.9 326.5,24.1 329.9,28.2 333.3,34.7 336.7,42.4 340.1,39.6 343.5,59.3 346.8,73.3 350.2,75.0 353.6,74.5 357.0,76.1 360.4,54.4 363.8,67.9 367.2,78.3 370.6,87.4 374.0,91.2 377.4,86.3 380.8,91.6 384.2,90.2 387.6,92.8 390.9,89.1 394.3,91.9 397.7,98.3 401.1,97.9 404.5,97.7 407.9,111.5 411.3,104.5 414.7,105.8 418.1,101.0 421.5,84.4 424.9,83.6 428.3,80.5 431.6,73.8 435.0,74.4 438.4,55.3 441.8,52.0 445.2,52.0 448.6,36.0 452.0,41.6" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="41.6" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$185.45</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$135.44</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $165.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $162.50</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $155.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-downtrend">
+      <header class="card-head">
+        <strong class="ticker">DXCM</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">nasdaq100</span>
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Healthcare</span>
+        <span class="exchange">NMS</span>
+        <span class="badge regime-downtrend">Downtrend: Doble piso en formación</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐</span>
+        <span class="tier-label">Borderline</span>
+      </div>
+      <div class="score-raw">Score crudo: 8.9</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$80.26</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$71.85 - $73.04]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">9.0%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> DXCM está en un contexto <strong>T2</strong> (pánico de mercado o spike de IV).</p>
+<p><strong>Zona.</strong> La zona detectada está en $71.85 – $73.04 (ancho 1.6%, compacta). Anclada en una resistencia rota previamente que ahora opera como soporte. El precio está a 9.0% del techo de la zona, al límite del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($63.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (5)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ $72.08</li>
+              
+              <li>POLARIDAD @ $72.50</li>
+              
+              <li>SMA50W @ $72.71</li>
+              
+              <li>HVN @ $72.97</li>
+              
+              <li>GAP @ $71.92</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 36.0 &middot; RSI_w: 50.5 &middot; MACD: bajando_negativo &middot; Momentum: 0</div>
+            <div>PT: $96.46 (20.2%) &middot; Buy: 89.7% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="109.0" width="424.0" height="5.6" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="118.6" y2="118.6" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="128.0" y2="128.0" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="156.2" y2="156.2" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,157.6 31.4,163.0 34.8,163.7 38.2,173.5 41.6,181.8 45.0,172.5 48.4,164.0 51.7,170.2 55.1,172.8 58.5,168.6 61.9,166.1 65.3,167.5 68.7,173.5 72.1,165.0 75.5,177.1 78.9,180.6 82.3,162.7 85.7,146.4 89.1,137.6 92.4,116.5 95.8,114.3 99.2,113.4 102.6,113.8 106.0,122.1 109.4,112.3 112.8,105.7 116.2,100.4 119.6,107.1 123.0,110.3 126.4,111.1 129.8,109.8 133.2,92.1 136.5,84.8 139.9,100.8 143.3,98.6 146.7,98.0 150.1,103.4 153.5,108.4 156.9,117.5 160.3,111.7 163.7,127.7 167.1,128.4 170.5,124.5 173.9,129.6 177.2,122.6 180.6,123.4 184.0,135.8 187.4,128.7 190.8,117.4 194.2,112.1 197.6,106.5 201.0,104.2 204.4,109.1 207.8,100.0 211.2,93.4 214.6,103.9 218.0,110.4 221.3,85.7 224.7,92.0 228.1,96.5 231.5,100.9 234.9,116.6 238.3,121.0 241.7,116.0 245.1,107.4 248.5,100.5 251.9,99.1 255.3,101.9 258.7,60.0 262.0,41.8 265.4,43.6 268.8,63.7 272.2,62.0 275.6,53.9 279.0,40.2 282.4,31.4 285.8,25.4 289.2,22.2 292.6,30.4 296.0,35.0 299.4,31.1 302.8,29.8 306.1,28.2 309.5,18.2 312.9,24.2 316.3,33.1 319.7,34.1 323.1,32.5 326.5,25.3 329.9,24.2 333.3,28.5 336.7,30.6 340.1,30.6 343.5,39.1 346.8,54.9 350.2,58.0 353.6,55.0 357.0,62.0 360.4,54.2 363.8,45.9 367.2,41.7 370.6,38.9 374.0,32.2 377.4,33.1 380.8,31.4 384.2,39.9 387.6,41.1 390.9,45.1 394.3,44.8 397.7,45.0 401.1,46.6 404.5,46.9 407.9,51.0 411.3,43.8 414.7,60.3 418.1,56.0 421.5,55.5 424.9,56.9 428.3,48.4 431.6,52.4 435.0,59.9 438.4,40.0 441.8,47.8 445.2,48.1 448.6,49.2 452.0,75.0" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="75.0" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$92.34</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$57.56</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $71.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $69.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $63.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-downtrend">
+      <header class="card-head">
+        <strong class="ticker">CSGP</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Real Estate</span>
+        <span class="exchange">NMS</span>
+        <span class="badge regime-downtrend">Downtrend: Doble piso en formación</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐</span>
+        <span class="tier-label">Borderline</span>
+      </div>
+      <div class="score-raw">Score crudo: 8.7</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$32.90</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$30.18 - $30.71]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">6.7%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> CSGP está en un contexto <strong>T2</strong> (pánico de mercado o spike de IV).</p>
+<p><strong>Zona.</strong> La zona detectada está en $30.18 – $30.71 (ancho 1.7%, compacta). Anclada en 2 elementos heavy: el AVWAP desde earnings como precio promedio de acumulación reciente; la SMA50 como soporte de mediano plazo. El precio está a 6.7% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($26.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (5)</h4>
+            <ul>
+              
+              <li>AVWAP_earnings @ $30.30</li>
+              
+              <li>SMA50D @ $30.40</li>
+              
+              <li>HVN @ $30.68</li>
+              
+              <li>EMA50D @ $30.21</li>
+              
+              <li>GAP @ $30.33</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 67.5 &middot; RSI_w: 47.1 &middot; MACD: neutral &middot; Momentum: 1</div>
+            <div>PT: $37.40 (13.7%) &middot; Buy: 57.1% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="114.1" width="424.0" height="7.5" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="138.7" y2="138.7" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="153.1" y2="153.1" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="181.8" y2="181.8" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,18.2 31.4,31.7 34.8,34.6 38.2,38.6 41.6,64.8 45.0,58.0 48.4,56.4 51.7,46.9 55.1,53.8 58.5,65.8 61.9,52.7 65.3,84.5 68.7,82.3 72.1,80.4 75.5,96.0 78.9,97.7 82.3,85.8 85.7,78.3 89.1,69.7 92.4,66.6 95.8,67.8 99.2,67.5 102.6,88.1 106.0,90.9 109.4,91.2 112.8,92.7 116.2,68.8 119.6,71.7 123.0,75.4 126.4,71.7 129.8,68.4 133.2,75.6 136.5,67.8 139.9,63.5 143.3,86.2 146.7,83.5 150.1,95.0 153.5,96.0 156.9,117.7 160.3,122.6 163.7,135.5 167.1,120.6 170.5,127.0 173.9,143.9 177.2,120.7 180.6,134.1 184.0,148.5 187.4,133.5 190.8,124.3 194.2,143.0 197.6,126.2 201.0,133.8 204.4,135.9 207.8,147.5 211.2,142.0 214.6,157.7 218.0,146.0 221.3,119.0 224.7,127.5 228.1,128.9 231.5,145.9 234.9,157.5 238.3,165.4 241.7,157.9 245.1,136.2 248.5,119.6 251.9,126.7 255.3,132.1 258.7,142.1 262.0,123.9 265.4,126.9 268.8,121.3 272.2,130.3 275.6,120.8 279.0,103.0 282.4,108.2 285.8,117.1 289.2,80.4 292.6,90.1 296.0,104.9 299.4,104.5 302.8,70.7 306.1,91.8 309.5,91.8 312.9,83.5 316.3,83.9 319.7,93.5 323.1,105.0 326.5,92.4 329.9,94.5 333.3,95.8 336.7,106.2 340.1,100.1 343.5,111.2 346.8,119.4 350.2,130.3 353.6,131.6 357.0,117.7 360.4,102.4 363.8,101.9 367.2,119.1 370.6,134.4 374.0,137.4 377.4,138.1 380.8,142.0 384.2,149.3 387.6,155.1 390.9,151.8 394.3,167.2 397.7,168.2 401.1,161.7 404.5,157.1 407.9,162.0 411.3,157.9 414.7,158.4 418.1,158.8 421.5,127.0 424.9,129.0 428.3,135.7 431.6,124.3 435.0,122.7 438.4,95.5 441.8,91.1 445.2,98.3 448.6,80.4 452.0,82.6" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="82.6" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$37.38</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$26.00</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $29.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $28.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $26.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-downtrend">
+      <header class="card-head">
+        <strong class="ticker">ADSK</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">nasdaq100</span>
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Technology</span>
+        <span class="exchange">NMS</span>
+        <span class="badge regime-downtrend">Downtrend: Doble piso en formación + divergencia</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐</span>
+        <span class="tier-label">Mínimo viable</span>
+      </div>
+      <div class="score-raw">Score crudo: 5.9</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$244.84</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$227.64 - $229.97]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">6.1%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> ADSK está en un contexto <strong>T2</strong> (pánico de mercado o spike de IV).</p>
+<p><strong>Zona.</strong> La zona detectada está en $227.64 – $229.97 (ancho 1.0%, compacta). Anclada en el AVWAP desde el último pivot bajo como precio promedio de acumulación reciente. El precio está a 6.1% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($202.50), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (3)</h4>
+            <ul>
+              
+              <li>AVWAP_pivot_low @ $227.86</li>
+              
+              <li>AVWAP_earnings @ $228.04</li>
+              
+              <li>EMA50D @ $229.74</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 62.7 &middot; RSI_w: 54.7 &middot; MACD: bajando_positivo &middot; Momentum: 0</div>
+            <div>PT: $307.54 (25.6%) &middot; Buy: 83.3% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="98.4" width="424.0" height="4.6" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="108.2" y2="108.2" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="123.0" y2="123.0" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="152.6" y2="152.6" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,94.4 31.4,83.6 34.8,88.4 38.2,88.7 41.6,86.7 45.0,84.5 48.4,70.0 51.7,63.7 55.1,59.9 58.5,72.5 61.9,56.8 65.3,69.7 68.7,86.3 72.1,88.7 75.5,96.3 78.9,90.7 82.3,85.2 85.7,71.7 89.1,70.4 92.4,71.4 95.8,78.2 99.2,76.6 102.6,82.1 106.0,84.5 109.4,76.7 112.8,95.7 116.2,62.5 119.6,85.2 123.0,99.1 126.4,91.1 129.8,98.4 133.2,108.1 136.5,110.0 139.9,115.5 143.3,146.6 146.7,160.7 150.1,160.3 153.5,154.8 156.9,171.3 160.3,169.8 163.7,181.8 167.1,179.7 170.5,172.2 173.9,177.8 177.2,165.0 180.6,167.0 184.0,168.6 187.4,158.0 190.8,142.8 194.2,142.7 197.6,133.1 201.0,145.6 204.4,140.6 207.8,140.9 211.2,133.4 214.6,145.9 218.0,139.8 221.3,123.9 224.7,121.3 228.1,122.4 231.5,135.5 234.9,150.7 238.3,147.2 241.7,138.3 245.1,106.4 248.5,83.7 251.9,68.2 255.3,88.5 258.7,90.0 262.0,89.0 265.4,84.1 268.8,78.5 272.2,73.7 275.6,60.6 279.0,46.8 282.4,55.7 285.8,59.8 289.2,43.1 292.6,55.5 296.0,75.3 299.4,65.2 302.8,56.3 306.1,56.8 309.5,51.3 312.9,50.1 316.3,56.4 319.7,49.4 323.1,18.2 326.5,37.8 329.9,42.0 333.3,63.4 336.7,75.2 340.1,83.5 343.5,122.2 346.8,133.5 350.2,144.5 353.6,134.6 357.0,133.1 360.4,100.4 363.8,105.2 367.2,117.5 370.6,120.8 374.0,124.1 377.4,120.3 380.8,118.8 384.2,123.7 387.6,135.2 390.9,139.0 394.3,143.4 397.7,151.3 401.1,139.8 404.5,135.2 407.9,133.9 411.3,115.0 414.7,95.8 418.1,88.3 421.5,91.2 424.9,87.8 428.3,91.3 431.6,97.5 435.0,96.1 438.4,68.4 441.8,78.8 445.2,77.2 448.6,67.6 452.0,69.0" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="69.0" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$270.58</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$187.72</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $225.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $217.50</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $202.50<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+    <article class="card regime-uptrend">
+      <header class="card-head">
+        <strong class="ticker">DRI</strong>
+        
+        
+        <span class="universe-badges">
+          
+          <span class="universe-badge">sp500</span>
+          
+        </span>
+        
+        <span class="sector">Consumer Cyclical</span>
+        <span class="exchange">NYQ</span>
+        <span class="badge regime-uptrend">Uptrend: Dip post-earnings</span>
+      </header>
+
+      <div class="tier">
+        <span class="tier-stars">⭐⭐⭐⭐⭐</span>
+        <span class="tier-label">Confluencia excepcional</span>
+      </div>
+      <div class="score-raw">Score crudo: 21.0</div>
+
+      <section class="zone">
+        <div class="metric">
+          <span class="label">Spot</span>
+          <span class="value">$214.52</span>
+        </div>
+        <div class="metric">
+          <span class="label">Zona</span>
+          <span class="value">[$201.91 - $206.27]</span>
+        </div>
+        <div class="metric">
+          <span class="label">Distancia</span>
+          <span class="value">3.8%</span>
+        </div>
+      </section>
+
+      <div class="card-split">
+        <div class="card-split-text">
+          
+          <section class="narrative">
+            <p><strong>Situación.</strong> DRI está en un contexto <strong>T4</strong> (post-earnings dip con tendencia intacta).</p>
+<p><strong>Zona.</strong> La zona detectada está en $201.91 – $206.27 (ancho 2.1%, ajustada). Anclada en 3 elementos heavy: una resistencia rota previamente que ahora opera como soporte; el AVWAP desde earnings como precio promedio de acumulación reciente; la SMA200 como referencia institucional de largo plazo. El precio está a 3.8% del techo de la zona, dentro del rango operable.</p>
+<p><strong>Qué mirar.</strong> Si el precio cierra debajo del conservative ($185.00), conviene revisar la tesis. Eventos macro en ventana: cpi, fomc.</p>
+          </section>
+          
+
+          <section class="elements">
+            <h4>Elementos (8)</h4>
+            <ul>
+              
+              <li>POLARIDAD @ $202.87</li>
+              
+              <li>POLARIDAD @ $204.55</li>
+              
+              <li>SMA200D @ $205.29</li>
+              
+              <li>AVWAP_earnings @ $204.04</li>
+              
+              <li>EMA200D @ $204.34</li>
+              
+              <li>SMA50W @ $202.12</li>
+              
+              <li>HVN @ $206.06</li>
+              
+              <li>FIB_618 @ $202.81</li>
+              
+            </ul>
+          </section>
+
+          <section class="indicators">
+            <div>RSI_d: 58.2 &middot; RSI_w: 55.2 &middot; MACD: neutral &middot; Momentum: 0</div>
+            <div>PT: $233.44 (8.8%) &middot; Buy: 64.3% &middot; Downgrades: 0</div>
+          </section>
+        </div>
+
+        <div class="mini-chart">
+          
+          <svg viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Precio últimos 6 meses con zona de soporte y strikes sugeridos">
+<rect x="28.0" y="100.3" width="424.0" height="16.7" fill="#fbbf24" fill-opacity="0.18"/>
+<line x1="28.0" x2="452.0" y1="124.3" y2="124.3" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="143.5" y2="143.5" stroke="#f97316" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="28.0" x2="452.0" y1="181.8" y2="181.8" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="3 3"/>
+<polyline points="28.0,115.3 31.4,120.2 34.8,129.3 38.2,137.7 41.6,138.5 45.0,122.2 48.4,144.4 51.7,154.6 55.1,145.4 58.5,140.8 61.9,142.8 65.3,138.8 68.7,140.4 72.1,127.7 75.5,151.9 78.9,145.0 82.3,140.1 85.7,148.3 89.1,148.3 92.4,134.8 95.8,135.5 99.2,110.9 102.6,109.6 106.0,101.6 109.4,107.2 112.8,109.3 116.2,117.0 119.6,130.9 123.0,130.9 126.4,149.4 129.8,131.5 133.2,139.6 136.5,120.8 139.9,110.4 143.3,82.7 146.7,80.3 150.1,90.7 153.5,89.6 156.9,80.9 160.3,72.7 163.7,78.3 167.1,83.7 170.5,72.7 173.9,75.4 177.2,71.7 180.6,102.5 184.0,101.3 187.4,116.8 190.8,107.7 194.2,112.0 197.6,107.1 201.0,120.1 204.4,116.9 207.8,108.0 211.2,137.0 214.6,140.6 218.0,139.4 221.3,119.7 224.7,129.9 228.1,144.2 231.5,149.7 234.9,147.5 238.3,146.9 241.7,138.5 245.1,108.6 248.5,97.5 251.9,77.4 255.3,97.6 258.7,110.6 262.0,100.4 265.4,106.8 268.8,90.4 272.2,82.4 275.6,71.6 279.0,55.4 282.4,51.8 285.8,18.2 289.2,34.2 292.6,27.5 296.0,26.5 299.4,52.0 302.8,40.4 306.1,55.5 309.5,41.5 312.9,26.3 316.3,46.1 319.7,52.2 323.1,81.6 326.5,64.4 329.9,69.6 333.3,64.7 336.7,47.5 340.1,55.1 343.5,59.6 346.8,74.8 350.2,88.2 353.6,95.4 357.0,86.4 360.4,53.1 363.8,89.3 367.2,93.3 370.6,98.5 374.0,88.7 377.4,80.9 380.8,72.4 384.2,71.8 387.6,96.5 390.9,125.3 394.3,135.7 397.7,143.1 401.1,150.2 404.5,134.2 407.9,123.0 411.3,125.4 414.7,112.3 418.1,118.6 421.5,122.3 424.9,133.3 428.3,125.8 431.6,102.8 435.0,91.6 438.4,69.4 441.8,61.6 445.2,62.0 448.6,55.3 452.0,68.6" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.85"/>
+<circle cx="452.0" cy="68.6" r="3.5" fill="currentColor"/>
+<text x="2" y="18.0" font-size="8" fill="currentColor" opacity="0.55">$227.68</text>
+<text x="2" y="190.0" font-size="8" fill="currentColor" opacity="0.55">$185.00</text>
+<text x="28.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45">23 abr</text>
+<text x="452.0" y="199.0" font-size="8" fill="currentColor" opacity="0.45" text-anchor="end">hoy</text>
+</svg>
+          
+        </div>
+      </div>
+
+      <section class="strikes-banner">
+        <div>
+          <span class="strikes-title">Strikes sugeridos</span>
+          <div class="strikes-list">
+            <span class="strike"><span class="dot aggressive"></span>Aggressive $200.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+            <span class="strike"><span class="dot natural"></span>Natural $195.00</span>
+            <span class="strike"><span class="dot conservative"></span>Conservative $185.00<span class="strike-anchor">(debajo del piso de la zona)</span></span>
+          </div>
+        </div>
+        <span class="yield-note">verificar yield ≥1.5%/mes en broker</span>
+      </section>
+
+      
+
+      
+
+      
+    </article>
+    
+  </main>
+  <footer>
+    Generado: 2026-10-22T12:00:33 &middot; puts-screener v0.1
+  </footer>
+</body>
+</html>
